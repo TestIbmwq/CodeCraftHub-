@@ -1,0 +1,20 @@
+{
+  "name": "user-management-service",
+  "version": "1.0.0",
+  "description": "Node.js project",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"mocha tests\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "\"https://github.com/TestIbmwq/CodeCraftHub-\""
+  },
+  "keywords": [
+    "[\"chat\"",
+    "\"messaging\"",
+    "\"communication\"]"
+  ],
+  "author": "quinnwd",
+  "license": "ISC"
+}
