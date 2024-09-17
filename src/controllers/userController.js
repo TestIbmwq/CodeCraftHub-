@@ -2,69 +2,66 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const registerUser = async (req, res) => {
-  const { username, password } = req.body;
-
+// User registration
+exports.registerUser = async (req, res) => {
   try {
+    const { username, password } = req.body;
+
     // Check if the username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(409).json({ message: 'Username already exists' });
     }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user
+    // Create a new user
     const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully' });
+    return res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-const loginUser = async (req, res) => {
-  const { username, password } = req.body;
-
+// User login
+exports.loginUser = async (req, res) => {
   try {
+    const { username, password } = req.body;
+
     // Check if the username exists
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    const existingUser = await User.findOne({ username });
+    if (!existingUser) {
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
 
     // Check if the password is correct
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid password' });
+    const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
 
     // Generate a JSON Web Token (JWT)
-    const token = jwt.sign({ userId: user._id }, 'secretkey', { expiresIn: '1h' });
-
-    res.json({ token });
+    const token = jwt.sign({ username: existingUser.username }, '2be21f7597ba4ed6d6d12a65b04ce96130a28cd34f810108928ed53ec451e5c0', { expiresIn: '1h' });
+    return res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-const updateUserProfile = async (req, res) => {
-  const { username } = req.body;
-
+// User profile management
+exports.updateUserProfile = async (req, res) => {
   try {
-    // Update the user's username
-    await User.findByIdAndUpdate(req.user._id, { username });
-    
-    res.json({ message: 'User profile updated successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+    const { username } = req.params;
+    const { newUsername } = req.body;
 
-module.exports = {
-  registerUser,
-  loginUser,
-  updateUserProfile
+    // Update the user's username
+    await User.updateOne({ username }, { username: newUsername });
+
+    return res.status(200).json({ message: 'User profile updated successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 };
