@@ -4,17 +4,17 @@
   "description": "Node.js project",
   "main": "index.js",
   "scripts": {
-    "test": "\"mocha tests\""
+    "test": "mocha tests",
     "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "\"https://github.com/TestIbmwq/CodeCraftHub-\""
+    "url": "https://github.com/TestIbmwq/CodeCraftHub-"
   },
   "keywords": [
-    "[\"chat\"",
-    "\"messaging\"",
-    "\"communication\"]"
+    "chat",
+    "messaging",
+    "communication"
   ],
   "author": "quinnwd",
   "license": "ISC",
