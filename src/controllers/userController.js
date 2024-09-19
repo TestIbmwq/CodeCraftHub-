@@ -44,7 +44,7 @@ exports.loginUser = async (req, res) => {
     }
 
     // Generate a JSON Web Token (JWT)
-    const token = jwt.sign({ username: existingUser.username }, 'eac1bdbac066c8b6774fd83431c8dc7fe9a6a76bdb7039586c344804ff6a3453', { expiresIn: '1h' });
+    const token = jwt.sign({ username: existingUser.username }, '227f064c9fd1f951101c050dcdfd82147761f39b6e6fa01381d84ba6741e16ae', { expiresIn: '1h' });
     return res.status(200).json({ token });
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error' });
